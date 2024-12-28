@@ -1,6 +1,7 @@
 import { Outlet, Route, Routes } from 'react-router';
 import BaseLayout from './views/BaseLayout';
 import Home from './views/Home';
+import AboutUs from './views/AboutUs';
 import ContactUs from './views/ContactUs';
 import AvailableCats from './views/AvailableCats';
 
@@ -15,6 +16,7 @@ function App() {
         }
       >
         <Route path={'/'} element={<Home />} />
+        <Route path={'/about-us'} element={<AboutUs />} />
         <Route path={'/contact-us'} element={<ContactUs />} />
         <Route path={'/available-cats'} element={<AvailableCats />} />
       </Route>
@@ -23,3 +25,4 @@ function App() {
 }
 
 export default App;
+
