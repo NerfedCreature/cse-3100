@@ -11,6 +11,9 @@ const availableCats = [
 
 export default function AvailableCats() {
   const [cats, setCats] = useState([]);
+  const [filteredCats, setFilteredCats] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBreed, setSelectedBreed] = useState('');
 
   useEffect(() => {
     // Fetch cat images from an API endpoint and assign it to the availableCats list
@@ -23,6 +26,7 @@ export default function AvailableCats() {
         }));
 
         setCats(catsWithImages);
+        setFilteredCats(catsWithImages);
       } catch (error) {
         console.error('Error fetching cat images:', error);
       }
@@ -31,13 +35,58 @@ export default function AvailableCats() {
     fetchCatImages();
   }, []);
 
+  useEffect(() => {
+    let updatedCats = cats;
+
+    if (searchTerm) {
+      updatedCats = updatedCats.filter((cat) => cat.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+
+    if (selectedBreed) {
+      updatedCats = updatedCats.filter((cat) => cat.breed === selectedBreed);
+    }
+
+    setFilteredCats(updatedCats);
+  }, [searchTerm, selectedBreed, cats]);
+
   return (
     <section className="text-center mt-4">
       <h2>Available Cats</h2>
       <p>Meet our adorable cats looking for their forever home!</p>
 
+      <div className="filters mb-4">
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-md-4 mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="col-md-4">
+              <select
+                className="form-select"
+                value={selectedBreed}
+                onChange={(e) => setSelectedBreed(e.target.value)}
+              >
+                <option value="">All Breeds</option>
+                <option value="Sphynx">Sphynx</option>
+                <option value="Birman">Birman</option>
+                <option value="Bengal">Bengal</option>
+                <option value="Abyssinian">Abyssinian</option>
+                <option value="Persian">Persian</option>
+                <option value="Siamese">Siamese</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="mt-2 row g-4 cats-container" id="cats-container" style={{ rowGap: '20px' }}>
-        {cats.map((cat, i) => (
+        {filteredCats.map((cat, i) => (
           <div key={i} className="col-md-4">
             <div className="cat-card">
               <img src={cat.image} alt={cat.name} className="img-fluid mb-2" style={{ borderRadius: '8px', height: '200px', objectFit: 'cover' }} />
